@@ -1,4 +1,4 @@
-clear;
+clear;close all
 clc;
 load TrafficSignal.mat;
 [v,v_opt,c_opt]=GA(green,distance);
