@@ -3,7 +3,7 @@ function Cost = CostFunction(v0,v,green,distance)
 %损失函数，v0为初速度，v为各段速度(NumIntsct*NumGen)，green{i}为绿灯相位(2*n)，distance为车辆距离交叉路距离（NumIntsct*1）
 load Fuel;
 %%
-a=1.5;
+a = 1;
 distance   = distance(:);
 NumIntsct  = length(distance);
 NumGen     = length(v(1,:));

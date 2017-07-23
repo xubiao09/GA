@@ -50,7 +50,7 @@ while(true)
             tempv2 = Selection(v0,Cost);   %% Select another individual to cross
         end
        %% cross over
-        [tempv3,tempv4]  = CrossGen(tempv1,tempv2,alpha);
+        [tempv3,tempv4]  = CrossGen(tempv1,tempv2,alpha,vmax,vmin);
         vn(:,Selection_Num+1:Selection_Num+2) = [tempv3, tempv4];
         Selection_Num    = Selection_Num + 2;
     end
