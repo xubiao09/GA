@@ -23,7 +23,8 @@ for i=1:NumIntsct
         t1=t0+abs(v(i)-v(i-1))/1.5;
         d1=SumD(i-1)+abs(v(i)^2-v(i-1)^2)/2/1.5;
         t_acce=linspace(t0,t1,10);
-        d_acce=SumD(i-1)+v(i-1)*(t_acce-t0)+0.5*1.5*(t_acce-t0).^2;
+        a=1.5*(2*(v(i)-v(i-1)>=0)-1);
+        d_acce=SumD(i-1)+v(i-1)*(t_acce-t0)+0.5*a*(t_acce-t0).^2;
         v_acce=linspace(v(i-1),v(i),10);
         t2=t1+(SumD(i)-d1)/v(i);
         t_plot=[t_plot,t_acce,t2];
@@ -35,7 +36,8 @@ for i=1:NumIntsct
         t1=t0+abs(v(i)-v0)/1.5;
         d1=0+abs(v(i)^2-v0^2)/2/1.5;
         t_acce=linspace(t0,t1,10);
-        d_acce=0+v0*(t_acce-t0)+0.5*1.5*(t_acce-t0).^2;
+        a=1.5*(2*(v(i)-v0>=0)-1);
+        d_acce=0+v0*(t_acce-t0)+0.5*a*(t_acce-t0).^2;
         v_acce=linspace(v0,v(i),10);
         t2=t1+(SumD(i)-d1)/v(i);
         t_plot=[t_plot,t_acce,t2];
