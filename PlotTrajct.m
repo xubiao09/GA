@@ -1,4 +1,4 @@
-function PlotTrajct(green,v0,v,d)
+function [h1,h2]=PlotTrajct(green,v0,v,d)
 %%
 %画图，green为绿灯相位，v为各段车速，d为距离
 %%
@@ -44,14 +44,14 @@ for i=1:NumIntsct
         t0=t2;
     end
 end
-plot(t_plot,d_plot,'LineWidth',2);
+h1=plot(t_plot,d_plot,'LineWidth',2);
 xlabel('t[s]');
 ylabel('d[m]');
 xlim([0,max(t_plot)+10]);
 hold off;
 figure(3);
 hold on;
-plot(t_plot,v_plot,'LineWidth',2);
+h2=plot(t_plot,v_plot,'LineWidth',2);
 xlabel('t[s]');
 ylabel('v[m/s]');
 ylim([0,20]);
