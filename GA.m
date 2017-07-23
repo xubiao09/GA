@@ -5,7 +5,9 @@ function [v,v_opt,c_opt] = GA(v_intial,green,distance)
 %% Parameters of Genetic Algorithm
 NumGen    = 200;      % Number of individuals in a generation
 alpha     = 0.33;     % crossover opertor
-PMutation = 0.1;     % Mutation probability
+PMutation = 0.1;      % Mutation probability
+Pcross    = 0.95;     % Crossover probability
+
 MaxIter   = 1000;     % Maximum number of iteration
 verbose   = 1;        % output or not
 dispIter  = 20;
@@ -17,27 +19,22 @@ NumIntsct = length(distance);
 v_opt     = zeros(NumIntsct,MaxIter);           % Optimal velocity profiles
 c_opt     = zeros(MaxIter,1);                   % Optimal fuel consumption
 t_opt     = zeros(MaxIter,1);                   % Optimla time
+NumFesi   = zeros(MaxIter,1);                   % Number of feasible solutions
 
 v0        = IntialGen(vmax,vmin,NumIntsct,NumGen,distance,green); % Initialization
-Cost      = CostFunction(v_intial,v0,green,distance);             % cost for initialization
-[TempCost,Ind] = sort(Cost);                                      % Sort in a increasing order
-c_opt(1)  = TempCost(1);
-tempv     = v0(:,Ind);
-v_opt(:,1)= tempv(:,1);
-t_opt(1)  = sum(distance(:)./tempv(:,1));
 
 %% Main function
 Iter      = 1;                                                    %循环数目
-fprintf('\n Iteration     Fuel     Time      Fitness\n')
-fprintf('%9d %9.3f %9.3f %9.3f\n', Iter, -2000*log(1-c_opt(1))./sum(distance)*1000/10, t_opt(1), c_opt(1))
+fprintf('\n Iteration     Fuel     Time      Fitness      No. \n')
 
 while(true)
     %% Selection + Crossover + Mutation
     Cost = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
     [Cost_sort,Index] = sort(Cost);                                     % Individual with minimal cost
-    v_opt(:,Iter+1)   = v0(:,Index(1));                                 % GA中每代种群中最优个体
-    c_opt(Iter+1)     = Cost_sort(1);                                   % GA中每代种群中最优个体的损失函数
-    t_opt(:,1)        = sum(distance(:)./v_opt(:,Iter+1));
+    v_opt(:,Iter)   = v0(:,Index(1));                                   % GA中每代种群中最优个体
+    c_opt(Iter)     = Cost_sort(1);                                     % GA中每代种群中最优个体的损失函数
+    t_opt(Iter)     = sum(distance(:)./v_opt(:,Iter));
+    NumFesi(Iter)   = length(find(Cost<1));
     
     vn                = zeros(NumIntsct,NumGen);
     vn(:,1:3)         = [v0(:,Index(1)),v0(:,Index(2)),v0(:,Index(3))]; % v1 is population after cross
@@ -50,13 +47,15 @@ while(true)
             tempv2 = Selection(v0,Cost);   %% Select another individual to cross
         end
        %% cross over
-        [tempv3,tempv4]  = CrossGen(tempv1,tempv2,alpha,vmax,vmin);
-        vn(:,Selection_Num+1:Selection_Num+2) = [tempv3, tempv4];
-        Selection_Num    = Selection_Num + 2;
+       if rand() < Pcross
+            [tempv1,tempv2]  = CrossGen(tempv1,tempv2,alpha,vmax,vmin);
+       end
+       vn(:,Selection_Num+1:Selection_Num+2) = [tempv1, tempv2];
+       Selection_Num    = Selection_Num + 2;
     end
     v0  = MutationGen_new(vn,PMutation,vmax,vmin);         %% Mutation
     %% Stopping Conidtion：1. 迭代代数超过一定值N；（或）2. 迭代次数超过100且最优值近似不变且约束条件全部满足
-    if(Iter > MaxIter - 1)
+    if(Iter > MaxIter)
         v = v_opt(:,end);
         break;
     elseif(Iter > inf)
@@ -67,9 +66,9 @@ while(true)
     end
     
     %% output
-    Iter = Iter + 1;  
-    Fuel = -2000*log(1-c_opt(Iter))./sum(distance)*1000/10;       %% fuel consumption per 100 km 
+    Fuel = -2000*log(1-c_opt(Iter))./sum(distance)*100;       %% fuel consumption per 100 km 
     if verbose == 1 && (mod(Iter,dispIter) == 0 || Iter == 1)
-        fprintf('%9d %9.3f %9.3f %9.3f \n', Iter, Fuel, t_opt(Iter), c_opt(Iter))
+        fprintf('%9d %9.3f %9.3f %9.3f % 9d\n', Iter, Fuel, t_opt(Iter), c_opt(Iter),NumFesi(Iter) )
     end
+    Iter = Iter + 1;  
 end
