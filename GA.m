@@ -1,12 +1,12 @@
-function [v,v_opt,c_opt]=GA(green,distance)
+function [v,v_opt,c_opt]=GA(v_intial,green,distance)
 %%
-%ÒÅ´«Ëã·¨Çó×îÓÅËÙ¶ÈÐòÁÐv(m/s)£¬green{i}ÎªÂÌµÆÇø¼ä(2*n)£¬µÚÒ»ÐÐÎªÂÌµÆ¿ªÊ¼Ê±¼ä(s)£¬µÚ¶þÐÐÎªÂÌµÆ½áÊøÊ±¼ä(s)£¬distanceÎª³µÁ¾¾àÀë¶à¸ö½»²æÂ·¿ÚµÄ¾àÀë(m)
+%é—ä¼ ç®—æ³•æ±‚æœ€ä¼˜é€Ÿåº¦åºåˆ—v(m/s)ï¼Œgreen{i}ä¸ºç»¿ç¯åŒºé—´(2*n)ï¼Œç¬¬ä¸€è¡Œä¸ºç»¿ç¯å¼€å§‹æ—¶é—´(s)ï¼Œç¬¬äºŒè¡Œä¸ºç»¿ç¯ç»“æŸæ—¶é—´(s)ï¼Œdistanceä¸ºè½¦è¾†è·ç¦»å¤šä¸ªäº¤å‰è·¯å£çš„è·ç¦»(m)
 
 %% Parameters of Genetic Algorithm
 NumGen    = 100;      % Number of individuals in a generation
 alpha     = 0.33;    % crossover opertor
 PMutation = 0.2;     % Mutation probability
-MaxIter   = 1000;     % Maximum number of iteration
+MaxIter   = 2000;     % Maximum number of iteration
 verbose   = 1;       % output or not
 dispIter  = 20;
 
@@ -15,12 +15,12 @@ vmax      = 60/3.6;
 vmin      = 20/3.6;
 NumIntsct = length(distance);
 v0        = IntialGen(vmax,vmin,NumIntsct,NumGen,distance,green); %% Initialization
-Cost      = CostFunction(v0,green,distance);     %% cost for initialization
-[Cos,Ind] = sort(Cost);  %ÉýÐòÅÅÐò
+Cost      = CostFunction(v_intial,v0,green,distance);     %% cost for initialization
+[Cos,Ind] = sort(Cost);  %å‡åºæŽ’åº
 c_opt     = Cos(1);
 tempv     = v0(:,Ind);
 v_opt     = tempv(:,1);
-Iter      = 1;  %Ñ­»·ÊýÄ¿
+Iter      = 1;  %å¾ªçŽ¯æ•°ç›®
 
 %% Main function
 fprintf('\n Iteration    Fuel    Fitness\n')
@@ -32,15 +32,15 @@ while(true)
     v1   = CrossGen(v0,alpha);                              %% cross over
     %v2=MutationGen(v1,PMutation,vmax,vmin); 
     v2   = MutationGen_new(v1,PMutation,vmax,vmin);         %% Mutation
-    Cost = CostFunction(v2,green,distance);                 %% Fitness evaluation
+    Cost = CostFunction(v_intial,v2,green,distance);                 %% Fitness evaluation
     [v3,temp_v_opt,temp_c_opt] = Selection(v2,Cost,NumGen); %% Selection based on a linear ranking
-    %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GAÑ¡ÔñËã×Ó
+    %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GAé€‰æ‹©ç®—å­
     
     v0    = v3;
-    v_opt = [v_opt,temp_v_opt];                              %% GAÖÐÃ¿´úÖÖÈºÖÐ×îÓÅ¸öÌå
-    c_opt = [c_opt,temp_c_opt];                              %%GAÖÐÃ¿´úÖÖÈºÖÐ×îÓÅ¸öÌåµÄËðÊ§º¯Êý
+    v_opt = [v_opt,temp_v_opt];                              %% GAä¸­æ¯ä»£ç§ç¾¤ä¸­æœ€ä¼˜ä¸ªä½“
+    c_opt = [c_opt,temp_c_opt];                              %%GAä¸­æ¯ä»£ç§ç¾¤ä¸­æœ€ä¼˜ä¸ªä½“çš„æŸå¤±å‡½æ•°
 
-    %% Stopping Conidtion£º1. µü´ú´úÊý³¬¹ýÒ»¶¨ÖµN£»£¨»ò£©2. µü´ú´ÎÊý³¬¹ý100ÇÒ×îÓÅÖµ½üËÆ²»±äÇÒÔ¼ÊøÌõ¼þÈ«²¿Âú×ã
+    %% Stopping Conidtionï¼š1. è¿­ä»£ä»£æ•°è¶…è¿‡ä¸€å®šå€¼Nï¼›ï¼ˆæˆ–ï¼‰2. è¿­ä»£æ¬¡æ•°è¶…è¿‡100ä¸”æœ€ä¼˜å€¼è¿‘ä¼¼ä¸å˜ä¸”çº¦æŸæ¡ä»¶å…¨éƒ¨æ»¡è¶³
     if(Iter > MaxIter)
         v = v_opt(:,end);
         break;
