@@ -27,19 +27,27 @@ fprintf('\n Iteration    Fuel    Fitness\n')
 fprintf('%9d %9.3f %9.3f \n', Iter, -2000*log(1-c_opt)./sum(distance)*1000/10, c_opt)
 
 while(true)
-    
-    %% Crossover + Mutation + Selection
-    v1   = CrossGen(v0,alpha);                              %% cross over
-    %v2=MutationGen(v1,PMutation,vmax,vmin); 
+    %% Selection + Crossover + Mutation
+    Cost = CostFunction(v_intial,v0,green,distance);                 %% Fitness evaluation
+    [Cost_sort,Index]=sort(Cost);                                      %% Individual with minimal cost
+    v_opt = [v_opt,v0(:,Index(1))];                     %% GA中每代种群中最优个体
+    c_opt = [c_opt,Cost_sort(1)];                              %%GA中每代种群中最优个体的损失函数
+    v1=[v0(:,Index(1)),v0(:,Index(2)),v0(:,Index(3))];          %v1 is population after cross
+    Selection_Num=length(v1(1,:));
+    while(Selection_Num<=NumGen)
+        %% Selection
+        tempv1 = Selection(v0,Cost);       %% Select an individual to cross
+        tempv2 = Selection(v0,Cost);       %% Select another individual to cross
+        while(tempv1==tempv2)
+            tempv2 = Selection(v0,Cost);       %% Select another individual to cross
+        end
+       %% cross over
+        [tempv3,tempv4]   = CrossGen(tempv1,tempv2,alpha);
+        Selection_Num=Selection_Num+2;
+        v1=[v1, tempv3, tempv4];
+    end
     v2   = MutationGen_new(v1,PMutation,vmax,vmin);         %% Mutation
-    Cost = CostFunction(v_intial,v2,green,distance);                 %% Fitness evaluation
-    [v3,temp_v_opt,temp_c_opt] = Selection(v2,Cost,NumGen); %% Selection based on a linear ranking
-    %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GA选择算子
-    
-    v0    = v3;
-    v_opt = [v_opt,temp_v_opt];                              %% GA中每代种群中最优个体
-    c_opt = [c_opt,temp_c_opt];                              %%GA中每代种群中最优个体的损失函数
-
+    v0    = v2;
     %% Stopping Conidtion：1. 迭代代数超过一定值N；（或）2. 迭代次数超过100且最优值近似不变且约束条件全部满足
     if(Iter > MaxIter)
         v = v_opt(:,end);
@@ -52,9 +60,9 @@ while(true)
     end
     
     %% output
-    Fuel = -2000*log(1-temp_c_opt)./sum(distance)*1000/10;       %% fuel consumption per 100 km 
+    Fuel = -2000*log(1-c_opt(end))./sum(distance)*1000/10;       %% fuel consumption per 100 km 
     if verbose == 1 && (mod(Iter,dispIter) == 0 || Iter == 1)
-        fprintf('%9d %9.3f %9.3f \n', Iter, Fuel, temp_c_opt)
+        fprintf('%9d %9.3f %9.3f \n', Iter, Fuel, c_opt(end))
     end
     Iter   = Iter + 1;    
 end
