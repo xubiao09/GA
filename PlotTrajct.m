@@ -1,10 +1,10 @@
 function PlotTrajct(green,v0,v,d)
 %%
-%ç”»å›¾ï¼Œgreenä¸ºç»¿ç¯ç›¸ä½ï¼Œvä¸ºå„æ®µè½¦é€Ÿï¼Œdä¸ºè·ç¦»
+%»­Í¼£¬greenÎªÂÌµÆÏàÎ»£¬vÎª¸÷¶Î³µËÙ£¬dÎª¾àÀë
 %%
 d=d(:);
 v=v(:);
-NumIntsct=length(v);  %äº¤å‰å£æ•°ç›®
+NumIntsct=length(v);  %½»²æ¿ÚÊıÄ¿
 SumD=cumsum(d);
 t0=0;
 d0=0;

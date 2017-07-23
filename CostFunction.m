@@ -1,40 +1,38 @@
 function Cost = CostFunction(v0,v,green,distance)
 %%
-%鎹熷け鍑芥暟锛寁0涓哄垵閫熷害锛寁涓哄悇娈甸?搴?NumIntsct*NumGen)锛実reen{i}涓虹豢鐏浉浣?2*n)锛宒istance涓鸿溅杈嗚窛绂讳氦鍙夎矾璺濈锛圢umIntsct*1锛?
+%损失函数，v0为初速度，v为各段速度(NumIntsct*NumGen)，green{i}为绿灯相位(2*n)，distance为车辆距离交叉路距离（NumIntsct*1）
 load Fuel;
 %%
 a=1.5;
 distance   = distance(:);
 NumIntsct  = length(distance);
 NumGen     = length(v(1,:));
-Cost1      = zeros(1,NumGen);
-Fuel       = zeros(1,NumGen);
-distance   = distance*ones(1,NumGen);           %灏哾istance鎵╃含鎴愪笌v缁村害涓?嚧锛屼究浜庤绠?
-v1         = [v0*ones(1,NumGen);v(1:end-1,:)];  %鍚勪釜浣撳悇娈电殑鍒濋?搴︾煩闃碉紝i琛宩鍒楄〃绀虹j涓釜浣撶i涓矾鍙ｅ垵閫熷害
-v2         = v;                                 %鍚勪釜浣撳悇娈电殑鏈?搴︾煩闃碉紝i琛宩鍒楄〃绀虹j涓釜浣撶i涓矾鍙ｆ湯閫熷害
-d1         = abs(v2.^2-v1.^2)/2/a;              %鍔犻?娈电殑璺濈
-t1         = abs(v2-v1)/a;                      %鍔犻?娈电殑鏃堕棿
-d2         = distance-d1;                       %鍖??娈电殑璺濈
-t2         = d2./v2;                            %鍖??娈电殑鏃堕棿
-t_seg      = t1+t2;                             %璁＄畻姣忎釜绉嶇兢涓綋姣忔鐨勯?杩囨椂闂?
-t          = cumsum(t_seg);                     %璁＄畻姣忎釜绉嶇兢涓綋閫氳繃姣忎釜浜ゅ弶璺彛鐨勬?鏃堕棿
+distance   = distance*ones(1,NumGen);          %将distance扩纬成与v维度一致，便于计算
+v1         =[v0*ones(1,NumGen);v(1:end-1,:)];  %各个体各段的初速度矩阵，i行j列表示第j个个体第i个路口初速度
+v2         =v;                                 %各个体各段的末速度矩阵，i行j列表示第j个个体第i个路口末速度
+d1         =abs(v2.^2-v1.^2)/2/a;              %加速段的距离
+t1         =abs(v2-v1)/a;                      %加速段的时间
+d2         =distance-d1;                       %匀速段的距离
+t2         =d2./v2;                            %匀速段的时间
+t_seg      = t1+t2;                            %计算每个种群个体每段的通过时间
+t          = cumsum(t_seg);                    %计算每个种群个体通过每个交叉路口的总时间
 %parfor i = 1:NumIntsct
 for i = 1:NumIntsct
     Cost1_seg(i,:) = IfRed(t(i,:),green{i});
-    for j = 1:NumGen
-        %鍏堣绠楀姞閫熸鐨勬补鑰?
+    for j=1:NumGen
+        %先计算加速段的油耗
         v_ind1=v1(i,j);
         v_ind2=v2(i,j);
-        %鎵惧埌鍒濋?搴﹀搴旂殑娌硅?琛ㄧ殑琛?
+        %找到初速度对应的油耗表的行
         Temp=find(v_ind1<=vTable);
         iIndex=Temp(1);
-        %鎵惧埌鏈?搴﹀搴旂殑娌硅?琛ㄧ殑鍒?
+        %找到末速度对应的油耗表的列
         Temp=find(v_ind2<=vTable);
         jIndex=Temp(1);
         Fuel1=FuelAcce(iIndex,jIndex);
-        %鍐嶈绠楀寑閫熸鐨勬补鑰?
+        %再计算匀速段的油耗
         Fuel2=FuelConst(jIndex)*t2(i,j);
-        %璁＄畻鎬绘补鑰?
+        %计算总油耗
         Fuel_seg(i,j)=Fuel1+Fuel2;
     end
 end

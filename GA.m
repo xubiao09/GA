@@ -1,13 +1,13 @@
 function [v,v_opt,c_opt]=GA(v_intial,green,distance)
 %%
-%閬椾紶绠楁硶姹傛渶浼橀?搴﹀簭鍒梫(m/s)锛実reen{i}涓虹豢鐏尯闂?2*n)锛岀涓?涓虹豢鐏紑濮嬫椂闂?s)锛岀浜岃涓虹豢鐏粨鏉熸椂闂?s)锛宒istance涓鸿溅杈嗚窛绂诲涓氦鍙夎矾鍙ｇ殑璺濈(m)
+%遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，distance为车辆距离多个交叉路口的距离(m)
 
 %% Parameters of Genetic Algorithm
 NumGen    = 100;      % Number of individuals in a generation
-alpha     = 0.33;     % crossover opertor
-PMutation = 0.2;      % Mutation probability
+alpha     = 0.33;    % crossover opertor
+PMutation = 0.2;     % Mutation probability
 MaxIter   = 2000;     % Maximum number of iteration
-verbose   = 1;        % output or not
+verbose   = 1;       % output or not
 dispIter  = 20;
 
 %% Initialization
@@ -16,11 +16,11 @@ vmin      = 20/3.6;
 NumIntsct = length(distance);
 v0        = IntialGen(vmax,vmin,NumIntsct,NumGen,distance,green); %% Initialization
 Cost      = CostFunction(v_intial,v0,green,distance);     %% cost for initialization
-[Cos,Ind] = sort(Cost);  %鍗囧簭鎺掑簭
+[Cos,Ind] = sort(Cost);  %升序排序
 c_opt     = Cos(1);
 tempv     = v0(:,Ind);
 v_opt     = tempv(:,1);
-Iter      = 1;  %寰幆鏁扮洰
+Iter      = 1;  %循环数目
 
 %% Main function
 fprintf('\n Iteration    Fuel    Fitness\n')
@@ -34,13 +34,13 @@ while(true)
     v2   = MutationGen_new(v1,PMutation,vmax,vmin);         %% Mutation
     Cost = CostFunction(v_intial,v2,green,distance);                 %% Fitness evaluation
     [v3,temp_v_opt,temp_c_opt] = Selection(v2,Cost,NumGen); %% Selection based on a linear ranking
-    %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GA閫夋嫨绠楀瓙
+    %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GA选择算子
     
     v0    = v3;
-    v_opt = [v_opt,temp_v_opt];                              %% GA涓瘡浠ｇ缇や腑鏈?紭涓綋
-    c_opt = [c_opt,temp_c_opt];                              %%GA涓瘡浠ｇ缇や腑鏈?紭涓綋鐨勬崯澶卞嚱鏁?
+    v_opt = [v_opt,temp_v_opt];                              %% GA中每代种群中最优个体
+    c_opt = [c_opt,temp_c_opt];                              %%GA中每代种群中最优个体的损失函数
 
-    %% Stopping Conidtion锛?. 杩唬浠ｆ暟瓒呰繃涓?畾鍊糔锛涳紙鎴栵級2. 杩唬娆℃暟瓒呰繃100涓旀渶浼樺?杩戜技涓嶅彉涓旂害鏉熸潯浠跺叏閮ㄦ弧瓒?
+    %% Stopping Conidtion：1. 迭代代数超过一定值N；（或）2. 迭代次数超过100且最优值近似不变且约束条件全部满足
     if(Iter > MaxIter)
         v = v_opt(:,end);
         break;
