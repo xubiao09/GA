@@ -1,13 +1,13 @@
 function [v,v_opt,c_opt]=GA(v_intial,green,distance)
 %%
-%遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，distance为车辆距离多个交叉路口的距离(m)
+%遗传算法求最优�?度序列v(m/s)，green{i}为绿灯区�?2*n)，第�?��为绿灯开始时�?s)，第二行为绿灯结束时�?s)，distance为车辆距离多个交叉路口的距离(m)
 
 %% Parameters of Genetic Algorithm
 NumGen    = 100;      % Number of individuals in a generation
-alpha     = 0.33;    % crossover opertor
-PMutation = 0.2;     % Mutation probability
+alpha     = 0.33;     % crossover opertor
+PMutation = 0.2;      % Mutation probability
 MaxIter   = 2000;     % Maximum number of iteration
-verbose   = 1;       % output or not
+verbose   = 1;        % output or not
 dispIter  = 20;
 
 %% Initialization
@@ -37,10 +37,10 @@ while(true)
     %[v3,temp_v_opt,temp_c_opt]=Selection_new(v2,Cost,NumGen); %%GA选择算子
     
     v0    = v3;
-    v_opt = [v_opt,temp_v_opt];                              %% GA中每代种群中最优个体
-    c_opt = [c_opt,temp_c_opt];                              %%GA中每代种群中最优个体的损失函数
+    v_opt = [v_opt,temp_v_opt];                              %% GA中每代种群中�?��个体
+    c_opt = [c_opt,temp_c_opt];                              %%GA中每代种群中�?��个体的损失函�?
 
-    %% Stopping Conidtion：1. 迭代代数超过一定值N；（或）2. 迭代次数超过100且最优值近似不变且约束条件全部满足
+    %% Stopping Conidtion�?. 迭代代数超过�?��值N；（或）2. 迭代次数超过100且最优�?近似不变且约束条件全部满�?
     if(Iter > MaxIter)
         v = v_opt(:,end);
         break;
