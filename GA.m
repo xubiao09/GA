@@ -29,11 +29,11 @@ fprintf('\n Iteration     Fuel     Time      Fitness      No. \n')
 
 while(true)
     %% Selection + Crossover + Mutation
-    Cost = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
+    [Cost,ArvTime] = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
     [Cost_sort,Index] = sort(Cost);                                     % Individual with minimal cost
     v_opt(:,Iter)   = v0(:,Index(1));                                   % GA中每代种群中最优个体
     c_opt(Iter)     = Cost_sort(1);                                     % GA中每代种群中最优个体的损失函数
-    t_opt(Iter)     = sum(distance(:)./v_opt(:,Iter));
+    t_opt(Iter)     = ArvTime(Index(1));
     NumFesi(Iter)   = length(find(Cost<1));
     
     vn                = zeros(NumIntsct,NumGen);
