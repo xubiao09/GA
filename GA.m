@@ -29,7 +29,7 @@ fprintf('\n Iteration     Fuel     Time      Fitness      No. \n')
 
 while(true)
     %% Selection + Crossover + Mutation
-    [Cost,ArvTime] = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
+    [Cost,ArvTime,Time_seg] = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
     [Cost_sort,Index] = sort(Cost);                                     % Individual with minimal cost
     v_opt(:,Iter)   = v0(:,Index(1));                                   % GA中每代种群中最优个体
     c_opt(Iter)     = Cost_sort(1);                                     % GA中每代种群中最优个体的损失函数
@@ -41,14 +41,14 @@ while(true)
     Selection_Num     = 3;    
     while(Selection_Num <= NumGen)
        %% Selection
-        tempv1 = Selection(v0,Cost);       %% Select an individual to cross
-        tempv2 = Selection(v0,Cost);       %% Select another individual to cross
+        [tempv1,Time_seg1] = Selection(v0,Time_seg,Cost);       %% Select an individual to cross
+        [tempv2,Time_seg2] = Selection(v0,Time_seg,Cost);       %% Select another individual to cross
         while(tempv1 == tempv2)
-            tempv2 = Selection(v0,Cost);   %% Select another individual to cross
+            [tempv2,Time_seg2] = Selection(v0,Time_seg,Cost);   %% Select another individual to cross
         end
        %% cross over
        if rand() < Pcross
-            [tempv1,tempv2]  = CrossGen(tempv1,tempv2,alpha,vmax,vmin);
+            [tempv1,tempv2]  = CrossGen(tempv1,tempv2,Time_seg1,Time_seg2,alpha,vmax,vmin,green,distance,v_intial);
        end
        vn(:,Selection_Num+1:Selection_Num+2) = [tempv1, tempv2];
        Selection_Num    = Selection_Num + 2;

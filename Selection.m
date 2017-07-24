@@ -1,9 +1,10 @@
-function v1=Selection(v0,Cost)
+function [v1,t1]=Selection(v0,Time_seg,Cost)
 %%
 %根据概率进行选择,采用轮盘赌的方法进行选择
 %%
 [~,Index] = sort(Cost);  %升序排序
 tempv        = v0(:,Index);
+tempt        =Time_seg(:,Index);
 NumGen       = length(v0(1,:));
 tempn        = 1:NumGen;
 Pn           = 2*tempn/NumGen/(NumGen+1);  %排序中从1~NumGen的概率
@@ -14,7 +15,9 @@ p = rand();
 c = find(P <= p);
 if(~isempty(c))
     v1 = tempv(:,c(end)+1);
+    t1 = tempt(:,c(end)+1);
 else
     v1 = tempv(:,1);
+    t1 = tempt(:,1);
 end
 

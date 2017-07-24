@@ -1,6 +1,8 @@
-function [Cost,ArvTime] = CostFunction(v0,v,green,distance)
+function [Cost,ArvTime,Time_seg] = CostFunction(v0,v,green,distance)
 %%
 %损失函数，v0为初速度，v为各段速度(NumIntsct*NumGen)，green{i}为绿灯相位(2*n)，distance为车辆距离交叉路距离（NumIntsct*1）
+%ArvTime is the trip time when arriving at the final intersection
+%Time_seg is the trip time when arriving at each intersection
 load Fuel;
 %%
 a = 1;
@@ -40,4 +42,5 @@ Cost1 = sum(Cost1_seg);
 Fuel  = sum(Fuel_seg);
 Cost2 = 1-exp(-Fuel/2000);
 Cost = Cost1+Cost2;
-ArvTime=t(end,:);
+ArvTime=t(end,:);    %The trip time when arriving at the final intersection 
+Time_seg=t;          %The trip time when arriving at each intersection
