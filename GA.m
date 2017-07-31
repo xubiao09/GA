@@ -3,17 +3,19 @@ function [v,v_opt,c_opt] = GA(v_intial,green,distance)
 %遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，distance为车辆距离多个交叉路口的距离(m)
 
 %% Parameters of Genetic Algorithm
-NumGen    = 200;      % Number of individuals in a generation
+NumGen    = 500;      % Number of individuals in a generation
 alpha     = 0.33;     % crossover opertor
-PMutation = 0.1;      % Mutation probability
+PMutation = 0.2;      % Mutation probability
 Pcross    = 0.95;     % Crossover probability
 
 MaxIter   = 1000;     % Maximum number of iteration
 verbose   = 1;        % output or not
 dispIter  = 20;
 
+BestKeep  = round(NumGen*0.05);
+
 %% Initialization
-vmax      = 60/3.6;
+vmax      = 60/3.6;%60/3.6;
 vmin      = 20/3.6;
 NumIntsct = length(distance);
 v_opt     = zeros(NumIntsct,MaxIter);           % Optimal velocity profiles
@@ -37,8 +39,10 @@ while(true)
     NumFesi(Iter)   = length(find(Cost<1));
     
     vn                = zeros(NumIntsct,NumGen);
-    vn(:,1:3)         = [v0(:,Index(1)),v0(:,Index(2)),v0(:,Index(3))]; % v1 is population after cross
-    Selection_Num     = 3;    
+    for i = 1:BestKeep
+        vn(:,i) = v0(:,Index(i)); %% keep the best individual from the last generation
+    end
+    Selection_Num     = BestKeep;    
     while(Selection_Num <= NumGen)
        %% Selection
         [tempv1,Time_seg1] = Selection(v0,Time_seg,Cost);       %% Select an individual to cross

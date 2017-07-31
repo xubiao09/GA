@@ -3,7 +3,7 @@
 %%
 clear;
 clc;
-N = 5;  %灯的数目
+N = 10;  %灯的数目
 Cycle0=50:5:80;
 Distance0=400:20:800;
 for i=1:N

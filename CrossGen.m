@@ -4,25 +4,25 @@ function [v3,v4] = CrossGen(v1,v2,t1,t2,alpha,vmax,vmin,green,distance,v0)
 %t1 is the trip time when arriving at each intersection for v1
 %t2 is the trip time when arriving at each intersection for v2
 %%
-N=length(v1);   %No. of intersections
-TotalTime1=0;
-TotalTime2=0;
-for i=1:N
-    if(i==1)
-        tempv0_1=v0;
-        tempv0_2=v0;
+N = length(v1);   %No. of intersections
+TotalTime1 = 0;
+TotalTime2 = 0;
+for i = 1:N
+    if(i == 1)
+        tempv0_1 = v0;
+        tempv0_2 = v0;
     else
-        tempv0_1=v3(i-1);
-        tempv0_2=v4(i-1);
+        tempv0_1 = v3(i-1);
+        tempv0_2 = v4(i-1);
     end
-    tmin3_1=TotalTime1+(vmax-tempv0_1)/1.5+(distance(i)-(vmax^2-tempv0_1^2)/3)/vmax;     %运动学约束的最短时间（子代1）
-    tmin3_2=TotalTime2+(vmax-tempv0_2)/1.5+(distance(i)-(vmax^2-tempv0_2^2)/3)/vmax;     %运动学约束的最短时间（子代2）
-    tmin1=min(t1(i),t2(i));                               %两个母代所夹的时间区间的最小值
-    tmax1=max(t1(i),t2(i));                               %两个母代所夹的时间区间的最大值
-    tmin1_1=max(tmin1,tmin3_1);                               %运动学约束最短时间和上面的最小值取交集（子代1）
-    tmin1_2=max(tmin1,tmin3_2);                               %运动学约束最短时间和上面的最小值取交集（子代2）
-    Index1=find(tmin1_1<green{i}(2,:)&tmax1>green{i}(1,:));   %找出落在最大最小时间内的绿灯区间1（子代1）
-    Index2=find(tmin1_2<green{i}(2,:)&tmax1>green{i}(1,:));   %找出落在最大最小时间内的绿灯区间2（子代2）
+    tmin3_1 = TotalTime1+(vmax-tempv0_1)/1.5+(distance(i)-(vmax^2-tempv0_1^2)/3)/vmax;     %运动学约束的最短时间（子代1）
+    tmin3_2 = TotalTime2+(vmax-tempv0_2)/1.5+(distance(i)-(vmax^2-tempv0_2^2)/3)/vmax;     %运动学约束的最短时间（子代2）
+    tmin1 = min(t1(i),t2(i));                               %两个母代所夹的时间区间的最小值
+    tmax1 = max(t1(i),t2(i));                               %两个母代所夹的时间区间的最大值
+    tmin1_1 = max(tmin1,tmin3_1);                               %运动学约束最短时间和上面的最小值取交集（子代1）
+    tmin1_2 = max(tmin1,tmin3_2);                               %运动学约束最短时间和上面的最小值取交集（子代2）
+    Index1 = find(tmin1_1<green{i}(2,:)&tmax1>green{i}(1,:));   %找出落在最大最小时间内的绿灯区间1（子代1）
+    Index2 = find(tmin1_2<green{i}(2,:)&tmax1>green{i}(1,:));   %找出落在最大最小时间内的绿灯区间2（子代2）
     if(~isempty(Index1))                              %若绿灯区间1存在
         SelectIndex=Index1(randi([1,length(Index1)]));     %随机选出一个区间
         tmin2_1=green{i}(1,SelectIndex);                      %找出随机选出的区间的最小时间（子代1）
@@ -56,13 +56,13 @@ for i=1:N
         a=1.5;
         v3(i,1)=tempv0_1+a*t3-sqrt(2*a*t3*tempv0_1+a^2*t3^2-2*a*tempd);
     else                      %保持匀速
-        v3(i,1)=tempv0_1;
+        v3(i,1) = tempv0_1;
     end
     if(tempd/tempv0_2<t4)     %需要减速
-        a=-1.5;
-        v4(i,1)=tempv0_2+a*t4+sqrt(2*a*t4*tempv0_2+a^2*t4^2-2*a*tempd);
+        a = -1.5;
+        v4(i,1) = tempv0_2+a*t4+sqrt(2*a*t4*tempv0_2+a^2*t4^2-2*a*tempd);
     elseif(tempd/tempv0_2>t4) %需要加速
-        a=1.5;
+        a = 1.5;
         v4(i,1)=tempv0_2+a*t4-sqrt(2*a*t4*tempv0_2+a^2*t4^2-2*a*tempd);
     else                      %保持匀速
         v4(i,1)=tempv0_2;

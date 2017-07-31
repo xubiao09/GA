@@ -2,7 +2,7 @@ function v0=IntialGen(vmax,vmin,NumIntsct,NumGen,d,green)
 %%
 %得到初始种群v0(NumIntsct*NumGen)，vmax为速度上限，vmin为速度下限，NumIntsct为交叉口数目,d为交叉路口间距离，green为绿灯相位
 %%
-Prb = 0.2;
+Prb = 0.4;
 v0  = [];
 for i = 1:NumGen
     if(rand() <= Prb)
