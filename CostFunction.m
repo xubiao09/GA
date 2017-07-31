@@ -1,8 +1,17 @@
-function [Cost,ArvTime,Time_seg] = CostFunction(v0,v,green,distance)
+function [Cost,ArvTime,Time_seg] = CostFunction(v0,v,green,distance,flag)
 %%
 %损失函数，v0为初速度，v为各段速度(NumIntsct*NumGen)，green{i}为绿灯相位(2*n)，distance为车辆距离交叉路距离（NumIntsct*1）
 %ArvTime is the trip time when arriving at the final intersection
 %Time_seg is the trip time when arriving at each intersection
+
+% flag = 1,  (default) calculate fuel consumtion as the cost function
+% flag = 2;  calculate time consumption as the cost function;
+
+if nargin <= 4
+    flag = 1;   % calculate fuel consumption
+end
+
+
 load Fuel;
 %%
 a = 1;
@@ -38,9 +47,20 @@ for i = 1:NumIntsct
         Fuel_seg(i,j)=Fuel1+Fuel2;
     end
 end
-Cost1 = sum(Cost1_seg);
-Fuel  = sum(Fuel_seg);
-Cost2 = 1-exp(-Fuel/2000);
-Cost = Cost1+Cost2;
-ArvTime=t(end,:);    %The trip time when arriving at the final intersection 
-Time_seg=t;          %The trip time when arriving at each intersection
+if flag == 1
+    Cost1 = sum(Cost1_seg);
+    Fuel  = sum(Fuel_seg);
+    Cost2 = 1-exp(-Fuel/2000);
+    Cost = Cost1+Cost2;
+    ArvTime=t(end,:);    %The trip time when arriving at the final intersection 
+    Time_seg=t;          %The trip time when arriving at each intersection
+
+elseif flag == 2
+    
+    Cost1 = sum(Cost1_seg);
+    Cost2 = 1-exp(- t(end,:)/2000);
+    Cost  = Cost1+Cost2;
+    ArvTime = t(end,:);    %The trip time when arriving at the final intersection 
+    Time_seg = t;          %The trip time when arriving at each intersection
+    
+end

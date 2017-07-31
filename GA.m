@@ -1,9 +1,13 @@
-function [v,v_opt,c_opt] = GA(v_intial,green,distance)
+function [v,v_opt,c_opt] = GA(v_intial,green,distance,flag)
 %%
 %遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，distance为车辆距离多个交叉路口的距离(m)
 
+if nargin <= 4
+    flag = 1;   % calculate fuel consumption by default
+end
+
 %% Parameters of Genetic Algorithm
-NumGen    = 500;      % Number of individuals in a generation
+NumGen    = 1000;      % Number of individuals in a generation
 alpha     = 0.33;     % crossover opertor
 PMutation = 0.2;      % Mutation probability
 Pcross    = 0.95;     % Crossover probability
@@ -29,9 +33,11 @@ v0        = IntialGen(vmax,vmin,NumIntsct,NumGen,distance,green); % Initializati
 Iter      = 1;                                                    %循环数目
 fprintf('\n Iteration     Fuel     Time      Fitness      No. \n')
 
+%flag = 2; % time consumption as the cost funtion
+
 while(true)
     %% Selection + Crossover + Mutation
-    [Cost,ArvTime,Time_seg] = CostFunction(v_intial,v0,green,distance);                    % Fitness evaluation
+    [Cost,ArvTime,Time_seg] = CostFunction(v_intial,v0,green,distance,flag);                    % Fitness evaluation
     [Cost_sort,Index] = sort(Cost);                                     % Individual with minimal cost
     v_opt(:,Iter)   = v0(:,Index(1));                                   % GA中每代种群中最优个体
     c_opt(Iter)     = Cost_sort(1);                                     % GA中每代种群中最优个体的损失函数

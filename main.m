@@ -2,7 +2,9 @@ clear;close all
 clc;
 load TrafficSignal.mat;
 v0 = 10;
-[v,v_opt,c_opt] = GA(v0,green,distance);
+flag = 2;
+[v,v_opt,c_opt] = GA(v0,green,distance,flag); % flag = 1: fuel£¬ flag = 2, time
+
 % plot(c_opt);
 figure(1);
 Fuel=-2000*log(1-c_opt);
