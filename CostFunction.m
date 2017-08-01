@@ -14,7 +14,7 @@ end
 
 load Fuel;
 %%
-a = 1;
+a = 1.5;
 distance   = distance(:);
 NumIntsct  = length(distance);
 NumGen     = length(v(1,:));
@@ -26,7 +26,7 @@ t1         =abs(v2-v1)/a;                      %加速段的时间
 d2         =distance-d1;                       %匀速段的距离
 t2         =d2./v2;                            %匀速段的时间
 t_seg      = t1+t2;                            %计算每个种群个体每段的通过时间
-t          = cumsum(t_seg);                    %计算每个种群个体通过每个交叉路口的总时间
+t          = cumsum(t_seg,1);                    %计算每个种群个体通过每个交叉路口的总时间
 %parfor i = 1:NumIntsct
 for i = 1:NumIntsct
     Cost1_seg(i,:) = IfRed(t(i,:),green{i});
@@ -48,8 +48,8 @@ for i = 1:NumIntsct
     end
 end
 if flag == 1
-    Cost1 = sum(Cost1_seg);
-    Fuel  = sum(Fuel_seg);
+    Cost1 = sum(Cost1_seg,1);
+    Fuel  = sum(Fuel_seg,1);
     Cost2 = 1-exp(-Fuel/2000);
     Cost = Cost1+Cost2;
     ArvTime=t(end,:);    %The trip time when arriving at the final intersection 
@@ -57,7 +57,7 @@ if flag == 1
 
 elseif flag == 2
     
-    Cost1 = sum(Cost1_seg);
+    Cost1 = sum(Cost1_seg,1);
     Cost2 = 1-exp(- t(end,:)/2000);
     Cost  = Cost1+Cost2;
     ArvTime = t(end,:);    %The trip time when arriving at the final intersection 

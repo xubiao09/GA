@@ -67,9 +67,6 @@ for i = 1:N
     else                      %±£³ÖÔÈËÙ
         v4(i,1)=tempv0_2;
     end
-%     if(v3(i,1)>vmax)
-%         TEST=1;     %for breakpoint
-%     end
     v3(i,1)=max(min(v3(i,1),vmax),vmin);
     v4(i,1)=max(min(v4(i,1),vmax),vmin);
     TotalTime1=tempt3;

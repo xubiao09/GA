@@ -11,7 +11,7 @@ d0=0;
 t_plot=[];
 d_plot=[];
 v_plot=[];
-figure(2);
+figure(1);
 hold on;
 for i=1:NumIntsct
     G=green{i};
@@ -51,7 +51,7 @@ xlabel('t[s]');
 ylabel('d[m]');
 xlim([0,max(t_plot)+10]);
 hold off;
-figure(3);
+figure(2);
 hold on;
 h2=plot(t_plot,v_plot,'LineWidth',2);
 xlabel('t[s]');
