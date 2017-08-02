@@ -1,9 +1,13 @@
-function v0=IntialGen(vmax,vmin,v_initial,NumIntsct,NumGen,d,green)
+function v0=IntialGen(vmax,vmin,v_initial,NumIntsct,NumGen,d,green,v00)
 %%
-%得到初始种群v0(NumIntsct*NumGen)，vmax为速度上限，vmin为速度下限，NumIntsct为交叉口数目,d为交叉路口间距离，green为绿灯相位
+%得到初始种群v0(NumIntsct*NumGen)，vmax为速度上限，vmin为速度下限，NumIntsct为交叉口数目,
+%d为交叉路口间距离，green为绿灯相位，v00为构造的初始解
 %%
 Prb = 0.4;
 v0  = [];
+%%
+%放入初始解
+v0=[v0,v00];
 %%
 %构造最短时间的解
 t0 = 0;
@@ -30,7 +34,8 @@ end
 v0 = [v0,tempv0];
 %%
 %构造其余解
-for i = 2:NumGen
+TempN=length(v0(1,:));
+for i = TempN+1:NumGen
     if(rand() <= Prb)
         %构造符合约束条件的解
         t0 = 0;

@@ -1,6 +1,7 @@
-function [v,t,v_opt,c_opt] = GA(v_intial,green,distance,flag)
+function [v,t,v_opt,c_opt] = GA(v_intial,green,distance,v00,flag)
 %%
-%遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，distance为车辆距离多个交叉路口的距离(m)
+%遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，
+%distance为车辆距离多个交叉路口的距离(m),v00为直接放入的初始解，flag为目标函数选取的标志
 
 if nargin <= 4
     flag = 1;   % calculate fuel consumption by default
@@ -27,7 +28,7 @@ c_opt     = zeros(MaxIter,1);                   % Optimal fuel consumption
 t_opt     = zeros(MaxIter,1);                   % Optimla time
 NumFesi   = zeros(MaxIter,1);                   % Number of feasible solutions
 
-v0        = IntialGen(vmax,vmin,v_intial,NumIntsct,NumGen,distance,green); % Initialization
+v0        = IntialGen(vmax,vmin,v_intial,NumIntsct,NumGen,distance,green,v00); % Initialization
 
 %% Main function
 Iter      = 1;                                                    %循环数目
