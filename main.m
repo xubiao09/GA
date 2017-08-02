@@ -1,10 +1,9 @@
-clear;close all
-clc;
+clear;close all; clc;
 load TrafficSignal.mat;
-v0 = 10;
-flag = 1;
-N=length(distance);
-if(mod(N,10)~=0)
+v0   = 10;
+flag = 1;           % fuel consumption
+N    = length(distance);
+if(mod(N,10) ~= 0)
     fprintf('Error, No. of intersections must be a multiple of 20');
 end
 %%
