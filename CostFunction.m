@@ -1,4 +1,4 @@
-function [Cost,ArvTime,Time_seg] = CostFunction(v0,v,green,distance,flag)
+function [Cost,ArvTime,Time_seg, Fuel,Fuel_seg] = CostFunction(v0,v,green,distance,flag)
 %%
 %损失函数，v0为初速度，v为各段速度(NumIntsct*NumGen)，green{i}为绿灯相位(2*n)，distance为车辆距离交叉路距离（NumIntsct*1）
 %ArvTime is the trip time when arriving at the final intersection
@@ -26,6 +26,10 @@ d2         = distance-d1;                        % 匀速段的距离
 t2         = d2./v2;                             % 匀速段的时间
 t_seg      = t1+t2;                              % 计算每个种群个体每段的通过时间
 t          = cumsum(t_seg,1);                    % 计算每个种群个体通过每个交叉路口的总时间
+
+Cost1_seg = zeros(NumIntsct,NumGen);
+Fuel_seg  = zeros(NumIntsct,NumGen);
+
 %parfor i = 1:NumIntsct
 for i = 1:NumIntsct
     Cost1_seg(i,:) = IfRed(t(i,:),green{i});
@@ -61,4 +65,14 @@ elseif flag == 2        % trip time as the cost function
     Cost  = Cost1+Cost2;
     ArvTime = t(end,:);    %The trip time when arriving at the final intersection 
     Time_seg = t;          %The trip time when arriving at each intersection   
+    
+elseif flag == 3      % fuel consumption + time
+    rho   = 0.5;
+    Cost1 = sum(Cost1_seg,1);
+    Fuel  = sum(Fuel_seg,1);
+    Cost2 = 1-exp( -Fuel/2000 - rho* t(end,:)/2000);
+    Cost  = Cost1 + Cost2;
+    ArvTime=t(end,:);    %The trip time when arriving at the final intersection 
+    Time_seg=t;          %The trip time when arriving at each intersection
+    
 end

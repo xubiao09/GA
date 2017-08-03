@@ -1,4 +1,4 @@
-function [v,t,v_opt,f_opt] = GA(v_intial,green,distance,v00,flag)
+function [v,t,v_opt,f_opt,f_seg] = GA(v_intial,green,distance,v00,flag)
 %%
 %遗传算法求最优速度序列v(m/s)，green{i}为绿灯区间(2*n)，第一行为绿灯开始时间(s)，第二行为绿灯结束时间(s)，
 %distance为车辆距离多个交叉路口的距离(m),v00为直接放入的初始解，flag为目标函数选取的标志
@@ -22,23 +22,26 @@ vmax      = 80/3.6;                             % maximal speed  m/s
 vmin      = 20/3.6;                             % minimal speed  m/s
 NumIntsct = length(distance);                   % Number of intersections
 v_opt     = zeros(NumIntsct,MaxIter);           % Optimal velocity profiles
+f_seg     = zeros(NumIntsct,1);                 % Fuel consumption at each segment
 f_opt     = zeros(MaxIter,1);                   % Optimal fuel consumption
 t_opt     = zeros(MaxIter,1);                   % Optimal time
 NumFesi   = zeros(MaxIter,1);                   % Number of feasible solutions
+c_opt     = zeros(MaxIter,1);                   % Number of feasible solutions
 
 %% Initialization
 v0        = IntialGen(vmax,vmin,v_intial,NumIntsct,NumGen,distance,green,v00); % Initialization
 
 %% Main function
 Iter      = 1;                                  % 循环数目
-fprintf('\n Iteration     Fuel     Time      Fitness      No. \n')
+fprintf('\n Iter.  Fitness     Fuel_100      Time      Fuel     No. \n')
 
 while(true)
     %% Selection + Crossover + Mutation
-    [Cost,ArvTime,Time_seg] = CostFunction(v_intial,v0,green,distance,flag);    % Fitness evaluation
+    [Cost,ArvTime,Time_seg, Fuel,Fuel_seg] = CostFunction(v_intial,v0,green,distance,flag);    % Fitness evaluation
     [Cost_sort,Index] = sort(Cost);                                             % Individual with minimal cost
     v_opt(:,Iter)     = v0(:,Index(1));                                         % GA中每代种群中最优个体
-    f_opt(Iter)       = Cost_sort(1);                                           % GA中每代种群中最优个体的损失函数
+    f_opt(Iter)       = Fuel(Index(1));                                         % GA中每代种群中最优个体的损失函数  
+    c_opt(Iter)       = Cost_sort(1);
     t_opt(Iter)       = ArvTime(Index(1));
     NumFesi(Iter)     = length(find(Cost<1));
     
@@ -66,6 +69,7 @@ while(true)
     if(Iter > MaxIter)
         v = v_opt(:,end);
         t = t_opt(end);
+        f_seg  = Fuel_seg(:,Index(1)); 
         break;
     elseif(Iter > inf)
         if(abs(f_opt(end)-f_opt(end-10))<1e-5)&&(abs(f_opt(end-1)-f_opt(end-9))<1e-5)&&(abs(f_opt(end-2)-f_opt(end-8))<1e-5)&&(f_opt(end)<1)
@@ -76,9 +80,9 @@ while(true)
     end
     
     %% output
-    Fuel = -2000*log(1-f_opt(Iter))./sum(distance)*100;       %% fuel consumption per 100 km 
+    fuel = f_opt(Iter)./sum(distance)*100;       %% fuel consumption per 100 km 
     if verbose == 1 && (mod(Iter,dispIter) == 0 || Iter == 1)
-        fprintf('%9d %9.3f %9.3f %9.3f % 9d\n', Iter, Fuel, t_opt(Iter), f_opt(Iter),NumFesi(Iter) )
+        fprintf('%5d %10.5f %9.3f %9.3f %9.3f % 9d\n', Iter,c_opt(Iter), fuel, t_opt(Iter), f_opt(Iter), NumFesi(Iter) )
     end
     Iter = Iter + 1;  
 end
