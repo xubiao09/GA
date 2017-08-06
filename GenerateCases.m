@@ -17,7 +17,7 @@ Distance0 = Distance0(1:N);
 for i=1:N
     Index_C=randi([1,length(Cycle0)]);
     Cycle=Cycle0(Index_C);
-    randnum=0.3+0.4*rand();
+    randnum=0.2+0.4*rand();
     GreenTime=ceil(Cycle*randnum);
     if(GreenTime>50)
         GreenTime = 50;

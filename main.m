@@ -18,12 +18,12 @@ v_1=[];
 Fuel_1=0;
 tempv00=[];
 for i=1:N/1
-    [tempv,tempt,~,tempc_opt] = GA(tempv0,{green{i}-t0},distance(i),tempv00,flag);
+    [tempv,tempt,tmpv_opt,tempc_opt,tempf_seg] = GA(tempv0,{green{i}-t0},distance(i),tempv00,flag);
     TempFuel=-2000*log(1-tempc_opt(end));
-    v_1=[v_1;tempv(:)];
-    t0=t0+tempt;
-    Fuel_1=Fuel_1+TempFuel;
-    tempv0=v_1(end);
+    v_1    = [v_1;tempv(:)];
+    t0     = t0+tempt;
+    Fuel_1 = Fuel_1+TempFuel;
+    tempv0 = v_1(end);
 end
 triptime_1=t0;
 %%
