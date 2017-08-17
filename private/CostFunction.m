@@ -70,7 +70,7 @@ elseif flag == 2        % trip time as the cost function
     Time_seg = t;          %The trip time when arriving at each intersection   
     
 elseif flag == 3      % fuel consumption + time
-    rho   = 0.5;
+    rho   = 0.3;
     Cost1 = sum(Cost1_seg,1);
     Fuel  = sum(Fuel_seg,1);
     Cost2 = 1-exp( -Fuel/factor - rho* t(end,:)/factor);

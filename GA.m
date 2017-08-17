@@ -97,7 +97,7 @@ while(true)
             Stop = false;
         end
         
-        if StopIter >=100
+        if StopIter >=200
             Stop = true;
         end
     end

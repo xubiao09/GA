@@ -79,6 +79,8 @@ set(h1,'orientation','horizontal','FontSize',8,...
     'Position',[0.15 0.06 0.7 0.03],'Interpreter','latex')
 set(h1,'box','off')
 
+print(gcf,'Fig1.eps','-painters','-depsc2','-r 600')
+
 figure; hold on;
 ColorSet = ['k','b','m','r','c','y'];
 for Index = 1:n

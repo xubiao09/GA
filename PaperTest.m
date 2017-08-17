@@ -38,6 +38,7 @@ xlabel('Algorithm','fontsize',8); ylim([300,400])
 ylabel('Fuel ($g$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 set(gcf,'Position',[250 150 400 350]);
+print(gcf,'Fig2.eps','-painters','-depsc2','-r 600')
 
 figure;
 bar(t_opt,'FaceColor', [0.75 0.75 0.75]);
@@ -47,5 +48,5 @@ xlabel('Algorithm','fontsize',8);ylim([300,450])
 ylabel('Trip time ($s$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 set(gcf,'Position',[250 150 400 350]);
-
+print(gcf,'Fig3.eps','-painters','-depsc2','-r 600')
 save RESULT green distance v0 v_opt t_opt f_opt f_seg
