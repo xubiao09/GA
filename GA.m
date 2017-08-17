@@ -81,6 +81,7 @@ while(true)
        Selection_Num = Selection_Num + 2;
     end
     v0  = MutationGen_new(vn,PMutation,vmax,vmin);         %% Mutation
+    
     %% Stopping Conidtion：1. 迭代代数超过一定值N；（或）2. 迭代次数超过100且最优值近似不变且约束条件全部满足
     if(Iter > MaxIter)
         v = v_opt(:,Iter);
@@ -106,8 +107,7 @@ while(true)
     if verbose == 1 && (mod(Iter,dispIter) == 0 || Iter == 1 || Stop == true)
         fprintf('%5d %10.5f %9.3f %9.3f %9.3f % 9d\n', Iter,c_opt(Iter), fuel, t_opt(Iter), f_opt(Iter), NumFesi(Iter) )
     end
-    
-    
+       
     if Stop == true
             v = v_opt(:,Iter);
             t = t_opt(Iter);
