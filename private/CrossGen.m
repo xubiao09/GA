@@ -5,7 +5,7 @@ function [v3,v4] = CrossGen(v1,v2,t1,t2,alpha,vmax,vmin,green,distance,v0)
 %t2 is the trip time when arriving at each intersection for v2
 %%
 
-P = 0.9;        % the probability for crossover using methods 1 and 2
+P = 0.5;        % the probability for crossover using methods 1 and 2
 
 N = length(v1);   %No. of intersections
 TotalTime1 = 0;

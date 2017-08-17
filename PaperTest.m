@@ -1,7 +1,7 @@
 clear;close all; clc;
 load TrafficSignal.mat;
 v0   = 10;
-flag = 1;           % fuel consumption
+flag = 3;           % 1: fuel consumption, 2:trip time, 3: combined
 N    = length(distance);
 if(mod(N,10) ~= 0)
     fprintf('Error, No. of intersections must be a multiple of 20');
@@ -28,22 +28,24 @@ for Index = 1:length(n)
 end
 
 %%
-TrajectoryFigure(green,v0,v,d);
+TrajectoryFigure(green,v0,v_opt,distance);
 
-figure(3);
-bar(f_opt);
+figure;
+bar(f_opt,'FaceColor', [0.75 0.75 0.75]);
 set(gca, 'xticklabel', {'1 intersection','2 intersections','5 intersections','10 intersections'},...
-    'interpreter','latex','fontsize',8); 
-xlabel('Algorithm','interpreter','latex','fontsize',8);
-ylabel('Fuel g','interpreter','latex','fontsize',8);
-xlabel('Algorithm');
-ylabel('Fuel[g]');
+    'fontsize',8); 
+xlabel('Algorithm','fontsize',8); ylim([300,400])
+ylabel('Fuel ($g$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
+set(gcf,'Position',[250 150 400 350]);
 
-figure(4);
-bar(t_opt);
-set(gca, 'xticklabel', {'One by one','Two by two','Five by five','Ten by ten'}); 
-xlabel('Algorithm');
-ylabel('Trip time[s]');
-save RESULT green v0 v_1 v_2 v_5 v_10 distance Fuel_1 Fuel_2 Fuel_5 Fuel_10...
-    triptime_1 triptime_2 triptime_5 triptime_10;
+figure;
+bar(t_opt,'FaceColor', [0.75 0.75 0.75]);
+set(gca, 'xticklabel', {'1 intersection','2 intersections','5 intersections','10 intersections'},...
+    'fontsize',8); 
+xlabel('Algorithm','fontsize',8);ylim([300,450])
+ylabel('Trip time ($s$)','interpreter','latex','fontsize',8);
+set(gca,'TickLabelInterpreter','latex','FontSize',8);
+set(gcf,'Position',[250 150 400 350]);
+
+save RESULT green distance v0 v_opt t_opt f_opt f_seg
