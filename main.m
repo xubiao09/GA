@@ -28,7 +28,8 @@ for Index = 1:length(n)
 end
 
 %%
-TrajectoryFigure(green,v0,v,d);
+[t_driver,v_driver,d_driver,fuel_driver,time_driver]=Driver(v0,green,distance);
+TrajectoryFigure(green,v0,v,d,t_driver,v_driver,d_driver);
 
 figure(3);
 bar(f_opt);

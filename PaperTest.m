@@ -28,25 +28,26 @@ for Index = 1:length(n)
 end
 
 %%
-TrajectoryFigure(green,v0,v_opt,distance);
+[t_driver,v_driver,d_driver,fuel_driver,time_driver]=Driver(v0,green,distance);
+TrajectoryFigure(green,v0,v_opt,distance,t_driver,v_driver,d_driver);
 
 figure;
-bar(f_opt,'FaceColor', [0.75 0.75 0.75]);
-set(gca, 'xticklabel', {'1 intersection','2 intersections','5 intersections','10 intersections'},...
+bar([f_opt,fuel_driver],'FaceColor', [0.75 0.75 0.75]);
+set(gca, 'xticklabel', {'1 intersection','2 intersections','5 intersections','10 intersections','Fast driving'},...
     'fontsize',8); 
-xlabel('Algorithm','fontsize',8); ylim([300,400])
+xlabel('Algorithm','fontsize',8); %ylim([300,400])
 ylabel('Fuel ($g$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 set(gcf,'Position',[250 150 400 350]);
 print(gcf,'Fig2.eps','-painters','-depsc2','-r 600')
 
 figure;
-bar(t_opt,'FaceColor', [0.75 0.75 0.75]);
+bar([t_opt time_driver],'FaceColor', [0.75 0.75 0.75]);
 set(gca, 'xticklabel', {'1 intersection','2 intersections','5 intersections','10 intersections'},...
     'fontsize',8); 
-xlabel('Algorithm','fontsize',8);ylim([300,450])
+xlabel('Algorithm','fontsize',8);%ylim([300,450])
 ylabel('Trip time ($s$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 set(gcf,'Position',[250 150 400 350]);
 print(gcf,'Fig3.eps','-painters','-depsc2','-r 600')
-save RESULT green distance v0 v_opt t_opt f_opt f_seg
+save RESULT green distance v0 v_opt t_opt f_opt f_seg fuel_driver time_driver t_driver v_driver d_driver

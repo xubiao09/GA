@@ -1,6 +1,7 @@
-function TrajectoryFigure(green,v0,v,d)
+function TrajectoryFigure(green,v0,v,d,td,vd,dd)
 %%
 %画图，green: green phase; v: velocity profiles; d: distance
+%td,vd,dd分别为最快驾驶的时间、速度、加速度序列
 %%
 [~,n]     = size(v);
 d         = d(:);
@@ -67,6 +68,7 @@ ColorSet = ['k','b','m','r','c','y'];
 for Index = 1:n
     h(Index) = plot(t_plot(:,Index),d_plot(:,Index),ColorSet(Index),'LineWidth',2);
 end
+h(Index+1) = plot(td,dd,ColorSet(Index+1),'LineWidth',2);
 xlim([0, max(t_plot(end,:))*1.1]);
 set(gca,'Position',[0.1 0.2 0.85 0.75],'TickLabelInterpreter','latex','fontsize',8)
 
@@ -74,7 +76,7 @@ xlabel('Time ($s$)','interpreter','latex','fontsize',8);
 ylabel('Distance ($m$)','interpreter','latex','fontsize',8);
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 set(gcf,'Position',[250 150 500 400]);
-h1 = legend([h(1),h(2),h(3),h(4)],'1 intersection','2 intersections','5 intersections','10 intersections');
+h1 = legend([h(1),h(2),h(3),h(4),h(5)],'1 intersection','2 intersections','5 intersections','10 intersections','Fast driving');
 set(h1,'orientation','horizontal','FontSize',8,...
     'Position',[0.15 0.06 0.7 0.03],'Interpreter','latex')
 set(h1,'box','off')
@@ -84,9 +86,11 @@ print(gcf,'Fig1.eps','-painters','-depsc2','-r 600')
 figure; hold on;
 ColorSet = ['k','b','m','r','c','y'];
 for Index = 1:n
-    plot(t_plot(:,Index),v_plot(:,Index),ColorSet(Index),'LineWidth',2);
+    h(Index)=plot(t_plot(:,Index),v_plot(:,Index),ColorSet(Index),'LineWidth',2);
 end
+h(Index+1) = plot(td,vd,ColorSet(Index+1),'LineWidth',2);
 xlabel('Time ($s$)','interpreter','latex','fontsize',8);
 ylabel('Velocity ($m/s$)','interpreter','latex','fontsize',8);
+h1 = legend([h(1),h(2),h(3),h(4),h(5)],'1 intersection','2 intersections','5 intersections','10 intersections','Fast driving');
 set(gca,'TickLabelInterpreter','latex','FontSize',8);
 grid on;
